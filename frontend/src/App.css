@@ -1,0 +1,43 @@
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  font-family: monospace;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.results {
+  margin-top: 24px;
+  padding: 20px;
+  background: #f3f4f6;
+  color: #111827;
+  border-radius: 8px;
+}
+
+.error {
+  color: #dc2626;
+}
