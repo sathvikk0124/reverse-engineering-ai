@@ -1,16 +1,19 @@
 import { useState } from "react";
 import "./App.css";
+import AnalysisHistory from "./components/AnalysisHistory";
 
 function App() {
   const [code, setCode] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
 
   const handleAnalyze = async () => {
     setLoading(true);
     setError("");
-    setAnalysis(null);
+    setAnalysis(data.analysis);
+    setHistoryRefreshKey((previous) => previous + 1);
 
     try {
       const response = await fetch(
@@ -90,6 +93,9 @@ function App() {
           </ul>
         </div>
       )}
+
+      <AnalysisHistory refreshKey={historyRefreshKey} />
+      
     </div>
   );
 }
