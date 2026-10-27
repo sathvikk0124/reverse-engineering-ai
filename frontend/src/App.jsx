@@ -10,36 +10,41 @@ function App() {
   const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
 
   const handleAnalyze = async () => {
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
+  setAnalysis(null);
+
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/analyze",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Analysis failed");
+    }
+
+    // Display the analysis results
     setAnalysis(data.analysis);
+
+    // Refresh analysis history
     setHistoryRefreshKey((previous) => previous + 1);
 
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/analyze",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ code })
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Analysis failed");
-      }
-
-      setAnalysis(data.analysis);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error("Analysis error:", error);
+    setError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="container">
@@ -80,22 +85,31 @@ function App() {
 
           <h3>Classes</h3>
           <ul>
-            {analysis.classes.map((cls, index) => (
-              <li key={index}>{cls}</li>
-            ))}
-          </ul>
+            {analysis.classes.length > 0 ? (
+            analysis.classes.map((cls, index) => (
+                <li key={index}>{cls}</li>
+            ))
+              ) : (
+                  <li>None detected</li>
+                  )}
+            </ul>
 
-          <h3>Imports</h3>
+                    <h3>Imports</h3>
           <ul>
-            {analysis.imports.map((imp, index) => (
-              <li key={index}>{imp}</li>
-            ))}
+            {analysis.imports.length > 0 ? (
+              analysis.imports.map((imp, index) => (
+                <li key={index}>{imp}</li>
+              ))
+            ) : (
+              <li>None detected</li>
+            )}
           </ul>
         </div>
       )}
 
+      {/* Analysis History Section */}
       <AnalysisHistory refreshKey={historyRefreshKey} />
-      
+
     </div>
   );
 }
